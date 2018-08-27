@@ -22,6 +22,9 @@ public class CashFlow {
 		String get_goalTime = "SELECT  GOAL_TIME FROM CLIENT_GOAL";
 		
 		ResultSet goalTimes = DataValues.fetchData(get_goalTime);
+		ResultSet goalTimes = DataValues.fetchData(get_goalTime);
+		ResultSet goalTimes = DataValues.fetchData(get_goalTime);
+		
 		try {
 			while(goalTimes.next())
 			{
