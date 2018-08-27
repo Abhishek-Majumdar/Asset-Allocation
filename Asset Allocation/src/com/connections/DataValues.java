@@ -5,14 +5,34 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+
 public class DataValues {
 	
+	public ResultSet fetchData(String query,String param1) {
+		
+		Connection conn = MyConnection.getMyConnection();
+		
+		try {
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setString(1, param1);
+			ResultSet rs = ps.executeQuery();
+			
+			return rs;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+		
+	}
 	public ResultSet fetchData(String query) {
 		
 		Connection conn = MyConnection.getMyConnection();
+		
 		try {
 			PreparedStatement ps = conn.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
+			
 			return rs;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -33,5 +53,7 @@ public class DataValues {
 			e.printStackTrace();
 		}
 	}
+	
+
 
 }
