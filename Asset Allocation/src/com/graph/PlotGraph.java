@@ -60,7 +60,7 @@ public class PlotGraph {
         fitter.withStartPoint(new double[] {1,1});
         double[] coeff = fitter.fit(obs.toList());
         System.out.println(Arrays.toString(coeff));
-        int risk_score = 0;
+        int risk_Score = 0;
          String username = null;
         rs = d1.fetchData("select * from user_session where user_status=1");
         try {
@@ -75,7 +75,7 @@ public class PlotGraph {
         try {
 			while(rs1.next()) {
 				try {
-					risk_score = rs1.getInt(1);
+					risk_Score = rs1.getInt(1);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -87,7 +87,7 @@ public class PlotGraph {
 		}
        // coeff[0] -= risk_score;
         PolynomialFunction polynomial = new PolynomialFunction(coeff);
-        double y =polynomial.value(risk_score);
+        double y =polynomial.value(risk_Score);
       
     //    laguerreSolver.s
      //   System.out.println("For x = 11, we found y = " + y);
