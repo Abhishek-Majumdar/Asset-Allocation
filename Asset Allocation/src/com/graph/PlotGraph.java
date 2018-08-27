@@ -15,9 +15,12 @@ import com.connections.DataValues;
 
 
 public class PlotGraph {
-    public double plotGraph() {
-        ArrayList<Double> risk = new ArrayList<Double>();
-        ArrayList<Double> returns = new ArrayList<Double>();
+	public  ArrayList<Double> risk = new ArrayList<Double>();
+    public ArrayList<Double> returns = new ArrayList<Double>();
+    public ArrayList<Double> plotGraph() {
+       
+        ArrayList<Double> return_value = new ArrayList<Double>();
+
         ResultSet rs;
         DataValues d1 = new DataValues();
         rs = d1.fetchData("select * from market_data");
@@ -91,7 +94,8 @@ public class PlotGraph {
       
     //    laguerreSolver.s
      //   System.out.println("For x = 11, we found y = " + y);
-        
-        return y;
+        return_value.add(y);
+        return_value.add((double) risk_Score);
+        return return_value;
     }
 }
