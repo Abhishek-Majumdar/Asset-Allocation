@@ -54,6 +54,28 @@ public class DataValues {
 		}
 	}
 	
+	public void addData(String query,int year,double val1,double val2, double val3, double val4, double val5, double val6) {
+		
+		Connection conn = MyConnection.getMyConnection();
+		
+		try {
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setInt(1, year);
+			ps.setDouble(2, val1);
+			ps.setDouble(3, val2);
+			ps.setDouble(4, val3);
+			ps.setDouble(5, val4);
+			ps.setDouble(6, val5);
+			ps.setDouble(7, val6);
+			ps.executeUpdate(query);
+			
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
 	
 
 
