@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 public class DataValues {
 	
-	public ResultSet fetchData(String query,String param1) {
+	public static ResultSet fetchData(String query,String param1) {
 		
 		Connection conn = MyConnection.getMyConnection();
 		
@@ -25,7 +25,7 @@ public class DataValues {
 		return null;
 		
 	}
-	public ResultSet fetchData(String query) {
+	public static ResultSet fetchData(String query) {
 		
 		Connection conn = MyConnection.getMyConnection();
 		
