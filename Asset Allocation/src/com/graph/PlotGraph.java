@@ -11,6 +11,8 @@ import org.apache.commons.math3.fitting.PolynomialCurveFitter;
 import org.apache.commons.math3.fitting.WeightedObservedPoints;
 
 import com.connections.DataValues;
+import com.misc.Min_max;
+import com.misc.Randomizer;
 
 
 
@@ -22,9 +24,13 @@ public class PlotGraph {
         ArrayList<Double> return_value = new ArrayList<Double>();
 
         ResultSet rs;
+        Double  r_return;
+        int random_min[] = {-1,-10,-5};
+        int random_max[]= {2,10,10};
+        Randomizer random = new Randomizer();
         DataValues d1 = new DataValues();
         rs = d1.fetchData("select * from market_data");
-        
+        Min_max m1 = new Min_max();
         try {
 			while(rs.next()) {
 				risk.add(rs.getDouble(1));
@@ -49,7 +55,9 @@ public class PlotGraph {
             int size = risk.size();
             //int sectionSize = (int) (1000 / (size - 1));
             for(int i = 0; i < size; i++) {
-                    obs.add(risk.get(i), returns.get(i));
+                r_return = returns.get(i)*random.getRandomValue(random_min[i], random_max[i]);
+
+                    obs.add(risk.get(i),r_return);
                
             }
         } 
@@ -65,7 +73,7 @@ public class PlotGraph {
         System.out.println(Arrays.toString(coeff));
         int risk_Score = 0;
          String username = null;
-        rs = d1.fetchData("select * from user_session where user_status=1");
+        rs = d1.fetchData("select username from user_session where user_status=1");
         try {
 			while(rs.next()) {
 				username = rs.getString(1);
@@ -91,6 +99,10 @@ public class PlotGraph {
        // coeff[0] -= risk_score;
         PolynomialFunction polynomial = new PolynomialFunction(coeff);
         double y =polynomial.value(risk_Score);
+        Double min, max;
+        min = m1.find_min(risk);
+        max = m1.find_max(risk);
+        double risk_normal = min + ((risk_Score-1)/4*(max-min));
       
     //    laguerreSolver.s
      //   System.out.println("For x = 11, we found y = " + y);
