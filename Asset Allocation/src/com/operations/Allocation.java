@@ -61,7 +61,7 @@ public class Allocation {
 	        
 	        expected_rate=((amount-principal)/principal)*100;
 	        
-	        if(expected_rate<return_total)
+	        if(expected_rate<=return_total)
 	        return true;
 	        
 	        return false;
