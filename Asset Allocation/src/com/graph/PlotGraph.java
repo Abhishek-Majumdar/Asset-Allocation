@@ -38,22 +38,13 @@ public class PlotGraph {
 				
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-//        keyPoints.add(4.89); Risk
-//        keyPoints.add(19.41);
-//        keyPoints.add(28.41);
-//      
-//        ArrayList<Double> keyPoints1 = new ArrayList<Double>();
-//        keyPoints1.add(5.80);	Return
-//        keyPoints1.add(11.74);
-//        keyPoints1.add(7.29);
+
         
         WeightedObservedPoints obs = new WeightedObservedPoints();
         if(risk != null && risk.size() != 1) {
             int size = risk.size();
-            //int sectionSize = (int) (1000 / (size - 1));
             for(int i = 0; i < size; i++) {
                 r_return = returns.get(i)*random.getRandomValue(random_min[i], random_max[i]);
 

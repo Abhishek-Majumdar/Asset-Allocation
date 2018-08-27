@@ -54,7 +54,7 @@ public class DataValues {
 		}
 	}
 	
-	public void addData(String query,int year,double val1,double val2, double val3, double val4, double val5, double val6) {
+	public static void addData(String query,int year,double val1,double val2, double val3, double val4, double val5, double val6) {
 		
 		Connection conn = MyConnection.getMyConnection();
 		
