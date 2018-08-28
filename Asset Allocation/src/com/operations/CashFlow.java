@@ -14,8 +14,6 @@ public class CashFlow {
 //	private long commodities_amt;
 //	private long equities_amt;
 //	private long fixedincome_amt;
-//	private long yearly_income;
-//	private long yearly_expense;
 	private double yearly_expense;
 	private double yearly_income;
 	private double income_growth;
@@ -48,11 +46,11 @@ public class CashFlow {
 		double yearly_expense_local;
 		double yearly_income_local;
 		
-		String get_current_assets = "SELECT ASSET_ID, ASSET_AMT FROM CLIENT_ASSET WHERE USERNAME = '?'";
-		String get_client_financialInfo = "SELECT MONTHLY_INCOME, MONTHLY_EXPENSE, INC_GROWTH_RATE FROM FINANCIAL_INFO WHERE USERNAME = '?'";
+		String get_current_assets = "SELECT ASSET_ID, ASSET_AMT FROM CLIENT_ASSET WHERE USERNAME = ?";
+		String get_client_financialInfo = "SELECT MONTHLY_INCOME, MONTHLY_EXPENSE, INC_GROWTH_RATE FROM FINANCIAL_INFO WHERE USERNAME = ?";
 		String get_returnRates = "SELECT MARKET_ID, RATE_RETURN FROM MARKET_DATA";
 		String get_goalTime = "SELECT  GOAL_TIME FROM CLIENT_GOAL";
-		String insert_Cashflow = "INSERT INTO DATABASE VALUES '?','?','?','?','?','?','?','?','?'";
+		String insert_Cashflow = "INSERT INTO DATABASE VALUES (?,?,?,?,?,?,?,?,?)";
 //		String get_networth = "SELECT CLIENT_NETWORTH FROM RISK_PROFILE WHERE USERNAME = '?' ";
 		
 		ResultSet current_assets = DataValues.fetchData(get_current_assets,userName);		//Get values from DB
@@ -150,10 +148,10 @@ public class CashFlow {
 			double equities_value,fixedincome_value,commodities_value;
 			List<Goals> all_goals=new ArrayList<Goals>();
 			
-			String query_networth = "SELECT CLIENT_NETWORTH FROM RISK_PROFILE WHERE USERNAME = '?'";
+			String query_networth = "SELECT CLIENT_NETWORTH FROM RISK_PROFILE WHERE USERNAME = ?";
 			String query_goals = "SELECT GOAL_ID,AMT_OUT,GOAL_TIME FROM CLIENT_GOAL";
-			String query_add = "INSERT INTO PORTFOLIO_CASHFLOW VALUES ('?','?','?','?','?','?','?','?')";
-			String query_goal_status = "INSERT INTO GOAL_STATUS VALUES('?','?','?','?')";
+			String query_add = "INSERT INTO PORTFOLIO_CASHFLOW VALUES (?,?,?,?,?,?,?,?)";
+			String query_goal_status = "INSERT INTO GOAL_STATUS VALUES(?,?,?,?)";
 			
 			//fetch data: networth
 			try 
@@ -273,7 +271,5 @@ public class CashFlow {
 				access_year++;
 		}
 	}
-		
-
 }
 
