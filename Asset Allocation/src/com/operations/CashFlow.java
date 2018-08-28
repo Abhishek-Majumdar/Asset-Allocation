@@ -132,10 +132,10 @@ public class CashFlow {
 		
 		while(current_year <= last_year)
 		{
-			double fixedIncome_returns=market_returns[0]*Randomizer.getRandomValue(-1,2)/100;
-			double equity_returns=market_returns[1]*Randomizer.getRandomValue(-10,10)/100;
-			double commodities_returns=market_returns[2]*Randomizer.getRandomValue(-5,10)/100;
-			double inflation_rate=market_returns[3]*Randomizer.getRandomValue(-5,10)/100;
+			double fixedIncome_returns=market_returns[0]+Randomizer.getRandomValue(-1,1)/100;
+			double equity_returns=market_returns[1]+Randomizer.getRandomValue(-15,25)/100;
+			double commodities_returns=market_returns[2]+Randomizer.getRandomValue(-15,20)/100;
+			double inflation_rate=market_returns[3]+Randomizer.getRandomValue(-2,1.5)/100;
 			
 			fixedIncome_flow = asset_values[0]*fixedIncome_returns;
 			asset_values[0] += fixedIncome_flow;
@@ -145,8 +145,8 @@ public class CashFlow {
 			asset_values[2] += commodities_flow;
 			
 			yearly_income_local += yearly_income_local*income_growth;
+			yearly_expense_local += yearly_expense_local*inflation_rate;
 			
-			yearly_expense_local += yearly_expense_local*(market_returns[3]/100);
 			total_cash_inflow = yearly_income_local + fixedIncome_flow + equity_flow + commodities_flow;
 			total_net_cashFlow = total_cash_inflow - yearly_expense_local;
 			DataValues.addData(insert_Cashflow, userName, current_year, fixedIncome_flow, equity_flow, commodities_flow, total_cash_inflow, yearly_expense_local, total_net_cashFlow);
@@ -225,10 +225,10 @@ public class CashFlow {
 			do
 			{
 				//calculate returns
-				fixed_income_returns=(market_returns[0]*Randomizer.getRandomValue(-1,2))/100;
-				equities_returns=(market_returns[1]*Randomizer.getRandomValue(-10,10))/100;
-				commodities_returns=(market_returns[2]*Randomizer.getRandomValue(-5,10))/100;
-				
+				fixed_income_returns=(market_returns[0]+Randomizer.getRandomValue(-1,1))/100;
+				equities_returns=(market_returns[1]+Randomizer.getRandomValue(-15,25))/100;
+				commodities_returns=(market_returns[2]+Randomizer.getRandomValue(-15,20))/100;
+				double inflation_rate=market_returns[3]+Randomizer.getRandomValue(-2,1.5)/100;
 				
 				//calculate cash flow
 				fixed_income=fixedincome_value*fixed_income_returns;
@@ -236,7 +236,7 @@ public class CashFlow {
 				commodities=commodities_value*commodities_returns;
 				
 				inc_income = inc_income+(inc_income * income_growth);
-				inc_expense = inc_expense+(inc_expense * market_returns[3]/100);
+				inc_expense = inc_expense+(inc_expense * inflation_rate);
 				
 				cash_in = fixed_income+equities+commodities+inc_income;
 				cash_out = inc_expense;
