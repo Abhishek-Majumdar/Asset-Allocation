@@ -1,6 +1,6 @@
 package com.operations;
 
-public class Goals 
+public class Goals implements Comparable
 {
 	private int year;
 	private int id;
@@ -30,6 +30,14 @@ public class Goals
 	}
 	public void setAmount(double amount) {
 		this.amount = amount;
+	}
+	@Override
+	public int compareTo(Object o) 
+	{
+		// TODO Auto-generated method stub
+		int compare_year=((Goals) o).getYear();
+        /* For Ascending order*/
+        return this.year-compare_year;
 	}
 
 }

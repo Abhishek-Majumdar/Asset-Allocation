@@ -3,6 +3,7 @@ package com.operations;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -174,18 +175,18 @@ public class CashFlow {
 			}
 			
 			//get all goals
-//			try 
-//			{
-//				ResultSet rs = DataValues.fetchData(query_goals,userName);
-//				while(rs.next())
-//				{
-//					all_goals.add(new Goals(rs.getInt(3),rs.getInt(1),rs.getInt(2)));
-//				}
-//			} 
-//			catch (SQLException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+			try 
+			{
+				ResultSet rs = DataValues.fetchData(query_goals,userName);
+				while(rs.next())
+				{
+					all_goals.add(new Goals(rs.getInt(3),rs.getInt(1),rs.getInt(2)));
+				}
+			} 
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			//fetch data: allocated asset
 			Allocation allocateObj = new Allocation();
