@@ -22,6 +22,11 @@ public class CashFlow {
 	private int current_year = 2018;						//Stores the goal completion year for longest goal
 	private int last_year;	
 	private List<Goals> all_goals=new ArrayList<Goals>();
+	private List<Double> fixedIncome_returns = new ArrayList<>();
+	private List<Double> equity_returns = new ArrayList<>();
+	private List<Double> commodities_return = new ArrayList<>();
+	private List<Double> inflation_rates = new ArrayList<>();
+	
 	
 	private String userName;
 	
@@ -132,20 +137,24 @@ public class CashFlow {
 		
 		while(current_year <= last_year)
 		{
-			double fixedIncome_returns=market_returns[0]+Randomizer.getRandomValue(-1,1)/100;
-			double equity_returns=market_returns[1]+Randomizer.getRandomValue(-15,25)/100;
-			double commodities_returns=market_returns[2]+Randomizer.getRandomValue(-15,20)/100;
-			double inflation_rate=market_returns[3]+Randomizer.getRandomValue(-2,1.5)/100;
+			double fI_r=(market_returns[0]+Randomizer.getRandomValue(-1,1))/100;
+			double e_r = (market_returns[1]+Randomizer.getRandomValue(-15,25))/100;
+			double c_r = (market_returns[2]+Randomizer.getRandomValue(-15,20))/100;
+			double i_r = (market_returns[2]+Randomizer.getRandomValue(-15,20))/100;
+			fixedIncome_returns.add(fI_r);
+			equity_returns.add(e_r);
+			commodities_return.add(c_r);
+			inflation_rates.add(i_r);
 			
-			fixedIncome_flow = asset_values[0]*fixedIncome_returns;
+			fixedIncome_flow = asset_values[0]*fI_r;
 			asset_values[0] += fixedIncome_flow;
-			equity_flow = asset_values[1]*equity_returns;
+			equity_flow = asset_values[1]*e_r;
 			asset_values[1] += equity_flow;
-			commodities_flow = asset_values[2]*commodities_returns;
+			commodities_flow = asset_values[2]*c_r;
 			asset_values[2] += commodities_flow;
 			
 			yearly_income_local += yearly_income_local*income_growth;
-			yearly_expense_local += yearly_expense_local*inflation_rate;
+			yearly_expense_local += yearly_expense_local*i_r;
 			
 			total_cash_inflow = yearly_income_local + fixedIncome_flow + equity_flow + commodities_flow;
 			total_net_cashFlow = total_cash_inflow - yearly_expense_local;
@@ -221,14 +230,17 @@ public class CashFlow {
 			System.out.println("Goal year: "+goal_year);
 			goal_amt = current_goal.getAmount();
 			goal_id = current_goal.getId();
+			int i=0;
 			
 			do
 			{
+				
 				//calculate returns
-				fixed_income_returns=(market_returns[0]+Randomizer.getRandomValue(-1,1))/100;
-				equities_returns=(market_returns[1]+Randomizer.getRandomValue(-15,25))/100;
-				commodities_returns=(market_returns[2]+Randomizer.getRandomValue(-15,20))/100;
-				double inflation_rate=market_returns[3]+Randomizer.getRandomValue(-2,1.5)/100;
+				fixed_income_returns= fixedIncome_returns.get(i);
+				equities_returns= equity_returns.get(i);
+				commodities_returns= commodities_return.get(i);
+				Double inflation_rate=inflation_rates.get(i);
+				i++;
 				
 				//calculate cash flow
 				fixed_income=fixedincome_value*fixed_income_returns;
