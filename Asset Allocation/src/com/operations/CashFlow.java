@@ -17,11 +17,11 @@ public class CashFlow {
 	private double yearly_income;
 	private double income_growth;
 	private double market_returns[] = {0,0,0,0};    //Schema : Fixed income, Equities, Commodities, Inflation rate 
-	private int last_year = 2018;
+	private int last_year = 2018;					//Stores the goal completion year for longest goal
 	
 	private String userName;
 	
-	public void setuser()
+	public void setuser()							//For session management
 	{
 		String query="SELECT USERNAME FROM USER_SESSION WHERE USER_STATUS=1";
 		ResultSet rs = DataValues.fetchData(query);
@@ -36,7 +36,7 @@ public class CashFlow {
 		}
 	}
 	
-	public void existing_cashflow()
+	public void existing_cashflow()					//Calculates cash-flow from existing assets
 	{
 		int count = 0;
 		
@@ -45,16 +45,17 @@ public class CashFlow {
 		double yearly_expense_local;
 		double yearly_income_local;
 		
-		String get_current_assets = "SELECT ASSET_ID, ASSET_AMT FROM CLIENT_ASSET WHERE USERNAME = ' '";
-		String get_client_financialInfo = "SELECT MONTHLY_INCOME, MONTHLY_EXPENSE, INC_GROWTH_RATE FROM FINANCIAL_INFO WHERE USERNAME = ' '";
+		String get_current_assets = "SELECT ASSET_ID, ASSET_AMT FROM CLIENT_ASSET WHERE USERNAME = '?'";
+		String get_client_financialInfo = "SELECT MONTHLY_INCOME, MONTHLY_EXPENSE, INC_GROWTH_RATE FROM FINANCIAL_INFO WHERE USERNAME = '?'";
 		String get_returnRates = "SELECT MARKET_ID, RATE_RETURN FROM MARKET_DATA";
 		String get_goalTime = "SELECT  GOAL_TIME FROM CLIENT_GOAL";
-		String get_networth = "SELECT CLIENT_NETWORTH FROM RISK_PROFILE WHERE USERNAME = ' ' ";
+		String insert_Cashflow = "INSERT INTO DATABASE VALUES '?','?','?','?','?','?','?','?','?'";
+//		String get_networth = "SELECT CLIENT_NETWORTH FROM RISK_PROFILE WHERE USERNAME = '?' ";
 		
-		ResultSet current_assets = DataValues.fetchData(get_current_assets);		//Get values from DB
-		ResultSet client_info = DataValues.fetchData(get_client_financialInfo);
-		ResultSet return_rates = DataValues.fetchData(get_returnRates);
-		ResultSet goalTimes = DataValues.fetchData(get_goalTime);
+		ResultSet current_assets = DataValues.fetchData(get_current_assets,userName);		//Get values from DB
+		ResultSet client_info = DataValues.fetchData(get_client_financialInfo,userName);	//Get client's financial data
+		ResultSet return_rates = DataValues.fetchData(get_returnRates);						//Get market return rates
+		ResultSet goalTimes = DataValues.fetchData(get_goalTime);							//Get client goals
 		
 		try {												//Get last goal's completion year from DB
 			while(goalTimes.next())
@@ -82,7 +83,7 @@ public class CashFlow {
 		try {												//Get market ROI's and inflation rates from DB
 			while(return_rates.next())
 			{
-				market_returns[count] = return_rates.getInt(1)/100;
+				market_returns[count] = return_rates.getInt(1);
 				count += 1;
 			}
 		} catch (SQLException e) {
@@ -117,9 +118,9 @@ public class CashFlow {
 		
 		while(current_year < last_year)
 		{
-			double fixedIncome_returns=market_returns[0]*Randomizer.getRandomValue(-1,2);
-			double equity_returns=market_returns[1]*Randomizer.getRandomValue(-10,10);
-			double commodities_returns=market_returns[2]*Randomizer.getRandomValue(-5,10);
+			double fixedIncome_returns=market_returns[0]*Randomizer.getRandomValue(-1,2)/100;
+			double equity_returns=market_returns[1]*Randomizer.getRandomValue(-10,10)/100;
+			double commodities_returns=market_returns[2]*Randomizer.getRandomValue(-5,10)/100;
 			
 			fixedIncome_flow = asset_values[0]*fixedIncome_returns;
 			asset_values[0] += fixedIncome_flow;
@@ -134,17 +135,9 @@ public class CashFlow {
 			total_cash_inflow = yearly_income_local + fixedIncome_flow + equity_flow + commodities_flow;
 			total_net_cashFlow = total_cash_inflow - yearly_expense_local;
 			
+			DataValues.addData(insert_Cashflow, userName, current_year, fixedIncome_flow, equity_flow, commodities_flow, total_cash_inflow, yearly_expense_local, total_net_cashFlow);
+			
 			current_year += 1;
-		}
-		
-	
-		
-		
+		}	
 	}
-	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-
 }
