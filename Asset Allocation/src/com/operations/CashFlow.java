@@ -19,7 +19,8 @@ public class CashFlow {
 	private double yearly_income;
 	private double income_growth;
 	private double[] market_returns = new double[4];    //Schema : Fixed income, Equities, Commodities, Inflation rate 
-	private int last_year = 2018;						//Stores the goal completion year for longest goal
+	private int current_year = 2018;						//Stores the goal completion year for longest goal
+	private int last_year;	
 	private List<Goals> all_goals=new ArrayList<Goals>();
 	
 	private String userName;
