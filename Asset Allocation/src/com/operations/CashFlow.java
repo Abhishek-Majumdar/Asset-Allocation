@@ -158,7 +158,7 @@ public class CashFlow {
 //			List<Goals> all_goals=new ArrayList<Goals>();
 			
 			String query_networth = "SELECT CLIENT_NETWORTH FROM RISK_PROFILE WHERE USERNAME = ?";
-			String query_goals = "SELECT GOAL_ID,AMT_OUT,GOAL_TIME FROM CLIENT_GOAL";
+			String query_goals = "SELECT GOAL_ID,AMT_OUT,GOAL_TIME FROM CLIENT_GOAL WHERE USERNAME = ?";
 			String query_add = "INSERT INTO PORTFOLIO_CASHFLOW VALUES (?,?,?,?,?,?,?,?)";
 			String query_goal_status = "INSERT INTO GOAL_STATUS VALUES(?,?,?,?)";
 			
@@ -188,6 +188,7 @@ public class CashFlow {
 				e.printStackTrace();
 			}
 			
+			
 			//fetch data: allocated asset
 			Allocation allocateObj = new Allocation();
 			int[] asset_alloc=allocateObj.allocate();
@@ -206,6 +207,7 @@ public class CashFlow {
 			double goal_amt;
 			Goals current_goal;
 			inc_income=yearly_income;
+			inc_expense = yearly_expense;
 			portfolio_value = networth;
 			
 			Iterator itr= all_goals.iterator();
@@ -228,11 +230,11 @@ public class CashFlow {
 				commodities=commodities_value*commodities_returns;
 				
 				inc_income = inc_income+(inc_income * income_growth);
-				inc_expense = inc_expense+(inc_expense * market_returns[3]);
+				inc_expense = inc_expense+(inc_expense * market_returns[3]/100);
 				
 				cash_in = fixed_income+equities+commodities+inc_income;
 				cash_out = inc_expense;
-				
+				System.out.println("Cash out: "+cash_out);
 				portfolio_value = portfolio_value + cash_in +cash_out;
 				
 				//add data values to table
