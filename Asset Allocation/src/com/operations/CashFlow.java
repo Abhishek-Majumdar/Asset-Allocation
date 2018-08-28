@@ -206,6 +206,10 @@ public class CashFlow {
 			Allocation allocateObj = new Allocation();
 			int[] asset_alloc=allocateObj.allocate();
 			
+			String query = "insert into final_allocation values (?,1,?,?,?)";
+			DataValues d1 = new DataValues();
+			d1.addData(query, userName, asset_alloc[0], asset_alloc[1], asset_alloc[2]);
+			
 			//calculate cash distribution
 			fixedincome_value=(asset_alloc[0]*networth)/100;
 			equities_value=(asset_alloc[1]*networth)/100;
