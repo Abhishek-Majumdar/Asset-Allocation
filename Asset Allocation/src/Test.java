@@ -23,7 +23,7 @@ public class Test {
 	//	double []market_returns = {0,0,0,0};
 	//	p1.plotGraph();
 		
-		System.out.println(Randomizer.getRandomValue(1, 100));
+//		System.out.println(Randomizer.getRandomValue(1, 100));
 		
 	}
 	
