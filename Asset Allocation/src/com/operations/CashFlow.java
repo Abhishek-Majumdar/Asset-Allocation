@@ -48,9 +48,9 @@ public class CashFlow {
 		double yearly_expense_local;
 		double yearly_income_local;
 		
-		String get_current_assets = "SELECT ASSET_ID, ASSET_AMT FROM CLIENT_ASSET WHERE USERNAME = ?";
+		String get_current_assets = "SELECT ASSET_AMT FROM CLIENT_ASSET WHERE USERNAME = ?";
 		String get_client_financialInfo = "SELECT MONTHLY_INCOME, MONTHLY_EXPENSE, INC_GROWTH_RATE FROM FINANCIAL_INFO WHERE USERNAME = ?";
-		String get_returnRates = "SELECT MARKET_ID, RATE_RETURN FROM MARKET_DATA";
+		String get_returnRates = "SELECT RATE_RETURN FROM MARKET_DATA";
 		String get_goalTime = "SELECT  GOAL_TIME FROM CLIENT_GOAL";
 		String insert_Cashflow = "INSERT INTO EXISTING_CASHFLOW VALUES (?,?,?,?,?,?,?,?)";
 //		String get_networth = "SELECT CLIENT_NETWORTH FROM RISK_PROFILE WHERE USERNAME = '?' ";
@@ -76,7 +76,7 @@ public class CashFlow {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		count=0;
 		try {												//Get existing asset values from DB
 			while(current_assets.next())
 			{
@@ -128,10 +128,10 @@ public class CashFlow {
 		
 		while(current_year <= last_year)
 		{
-			System.out.println("Last Year: "+last_year);
 			double fixedIncome_returns=market_returns[0]*Randomizer.getRandomValue(-1,2)/100;
 			double equity_returns=market_returns[1]*Randomizer.getRandomValue(-10,10)/100;
 			double commodities_returns=market_returns[2]*Randomizer.getRandomValue(-5,10)/100;
+			double inflation_rate=market_returns[3]*Randomizer.getRandomValue(-5,10)/100;
 			
 			fixedIncome_flow = asset_values[0]*fixedIncome_returns;
 			asset_values[0] += fixedIncome_flow;
@@ -140,12 +140,11 @@ public class CashFlow {
 			commodities_flow = asset_values[2]*commodities_returns;
 			asset_values[2] += commodities_flow;
 			
-			yearly_income_local += yearly_income*income_growth;
-			yearly_expense_local += yearly_expense*market_returns[3];
+			yearly_income_local += yearly_income_local*income_growth;
 			
+			yearly_expense_local += yearly_expense_local*(market_returns[3]/100);
 			total_cash_inflow = yearly_income_local + fixedIncome_flow + equity_flow + commodities_flow;
 			total_net_cashFlow = total_cash_inflow - yearly_expense_local;
-			
 			DataValues.addData(insert_Cashflow, userName, current_year, fixedIncome_flow, equity_flow, commodities_flow, total_cash_inflow, yearly_expense_local, total_net_cashFlow);
 			
 			current_year += 1;
