@@ -67,7 +67,7 @@ public class CashFlow {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		System.out.println("Last year"+last_year);
 		try {												//Get existing asset values from DB
 			while(current_assets.next())
 			{
@@ -105,7 +105,6 @@ public class CashFlow {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		count =0;
 
 		double equity_flow = 0.0;
@@ -119,6 +118,7 @@ public class CashFlow {
 		
 		while(current_year < last_year)
 		{
+			System.out.println("123");
 			double fixedIncome_returns=market_returns[0]*Randomizer.getRandomValue(-1,2)/100;
 			double equity_returns=market_returns[1]*Randomizer.getRandomValue(-10,10)/100;
 			double commodities_returns=market_returns[2]*Randomizer.getRandomValue(-5,10)/100;
@@ -137,7 +137,7 @@ public class CashFlow {
 			total_net_cashFlow = total_cash_inflow - yearly_expense_local;
 			
 			DataValues.addData(insert_Cashflow, userName, current_year, fixedIncome_flow, equity_flow, commodities_flow, total_cash_inflow, yearly_expense_local, total_net_cashFlow);
-			
+			System.out.println("USername: "+userName+"\ttotal_net_cashFlow"+total_net_cashFlow);
 			current_year += 1;
 		}	
 	}
