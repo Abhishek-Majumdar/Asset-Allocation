@@ -52,7 +52,7 @@ public class CashFlow {
 		String get_client_financialInfo = "SELECT MONTHLY_INCOME, MONTHLY_EXPENSE, INC_GROWTH_RATE FROM FINANCIAL_INFO WHERE USERNAME = ?";
 		String get_returnRates = "SELECT MARKET_ID, RATE_RETURN FROM MARKET_DATA";
 		String get_goalTime = "SELECT  GOAL_TIME FROM CLIENT_GOAL";
-		String insert_Cashflow = "INSERT INTO EXISTING_CASHFLOW VALUES (?,?,?,?,?,?,?,?,?)";
+		String insert_Cashflow = "INSERT INTO EXISTING_CASHFLOW VALUES (?,?,?,?,?,?,?,?)";
 //		String get_networth = "SELECT CLIENT_NETWORTH FROM RISK_PROFILE WHERE USERNAME = '?' ";
 		
 		
@@ -128,6 +128,7 @@ public class CashFlow {
 		
 		while(current_year <= last_year)
 		{
+			System.out.println("Last Year: "+last_year);
 			double fixedIncome_returns=market_returns[0]*Randomizer.getRandomValue(-1,2)/100;
 			double equity_returns=market_returns[1]*Randomizer.getRandomValue(-10,10)/100;
 			double commodities_returns=market_returns[2]*Randomizer.getRandomValue(-5,10)/100;

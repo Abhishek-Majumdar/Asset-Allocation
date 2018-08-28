@@ -16,10 +16,10 @@ public class Test {
 		CashFlow c1 = new CashFlow();
 		PlotGraph p1 = new PlotGraph();
 		//c1.setuser();
-		//c1.existing_cashflow();
+		c1.existing_cashflow();
 		//ResultSet current_assets = DataValues.fetchData(get_current_assets,userName);		//Get values from DB
 	//	double []market_returns = {0,0,0,0};
-		p1.plotGraph();
+		//p1.plotGraph();
 		
 	}
 	
