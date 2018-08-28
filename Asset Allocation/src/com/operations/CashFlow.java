@@ -2,6 +2,9 @@ package com.operations;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import com.connections.DataValues;
 import com.misc.Randomizer;
@@ -140,4 +143,137 @@ public class CashFlow {
 			current_year += 1;
 		}	
 	}
+
+		public void alloc_cash()
+		{
+			double networth =0;
+			double equities_value,fixedincome_value,commodities_value;
+			List<Goals> all_goals=new ArrayList<Goals>();
+			
+			String query_networth = "SELECT CLIENT_NETWORTH FROM RISK_PROFILE WHERE USERNAME = '?'";
+			String query_goals = "SELECT GOAL_ID,AMT_OUT,GOAL_TIME FROM CLIENT_GOAL";
+			String query_add = "INSERT INTO PORTFOLIO_CASHFLOW VALUES ('?','?','?','?','?','?','?','?')";
+			String query_goal_status = "INSERT INTO GOAL_STATUS VALUES('?','?','?','?')";
+			
+			//fetch data: networth
+			try 
+			{
+				ResultSet rs = DataValues.fetchData(query_networth,userName);
+				while(rs.next())
+					networth=rs.getInt(1);
+			} 
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			//get all goals
+			try 
+			{
+				ResultSet rs = DataValues.fetchData(query_goals,userName);
+				while(rs.next())
+				{
+					all_goals.add(new Goals(rs.getInt(3),rs.getInt(1),rs.getInt(2)));
+				}
+			} 
+			catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			//fetch data: allocated asset
+			Allocation allocateObj = new Allocation();
+			int[] asset_alloc=allocateObj.allocate();
+			
+			//calculate cash distribution
+			fixedincome_value=(asset_alloc[0]*networth)/100;
+			equities_value=(asset_alloc[1]*networth)/100;
+			commodities_value=(asset_alloc[2]*networth)/100;
+			
+			double equities_returns,fixed_income_returns,commodities_returns;
+			double equities,fixed_income,commodities;
+			double portfolio_value,cash_in,cash_out;
+			double inc_income =0,inc_expense =0;
+			int access_year=2018;
+			int goal_year,goal_id;
+			double goal_amt;
+			Goals current_goal;
+			inc_income=yearly_income;
+			portfolio_value = networth;
+			
+			Iterator itr= all_goals.iterator();
+			current_goal=(Goals)itr.next();
+			goal_year = current_goal.getYear();
+			goal_amt = current_goal.getAmount();
+			goal_id = current_goal.getId();
+			
+			while(access_year<last_year)
+			{
+				//calculate returns
+				fixed_income_returns=(market_returns[0]*Randomizer.getRandomValue(-1,2))/100;
+				equities_returns=(market_returns[1]*Randomizer.getRandomValue(-10,10))/100;
+				commodities_returns=(market_returns[2]*Randomizer.getRandomValue(-5,10))/100;
+				
+				
+				//calculate cash flow
+				fixed_income=fixedincome_value*fixed_income_returns;
+				equities=equities_value*equities_returns;
+				commodities=commodities_value*commodities_returns;
+				
+				inc_income = inc_income+(inc_income * income_growth);
+				inc_expense = inc_expense+(inc_expense * market_returns[3]);
+				
+				cash_in = fixed_income+equities+commodities+inc_income;
+				cash_out = inc_expense;
+				
+				portfolio_value = portfolio_value + cash_in +cash_out;
+				
+				//add data values to table
+				DataValues.addData(query_add,userName,access_year,fixed_income,equities,commodities,cash_in,cash_out,portfolio_value); 
+				
+				if(access_year == goal_year)
+				{
+					//goal is achieved
+					if(portfolio_value>goal_amt)
+					{
+						portfolio_value = portfolio_value - goal_amt;
+						DataValues.addData(query_goal_status,userName,goal_id,goal_year,1);
+						fixedincome_value = fixedincome_value - (asset_alloc[0] * goal_amt)/100;
+						equities_value = equities_value - (asset_alloc[1] * goal_amt)/100;
+						commodities_value = commodities_value - (asset_alloc[2] * goal_amt)/100;
+					}
+					//goal is not achieved
+					else
+					{
+						//update values
+						DataValues.addData(query_goal_status,userName,goal_id,goal_year,0);
+						fixedincome_value = fixed_income + fixedincome_value;
+						equities_value = equities + equities_value;
+						commodities_value = commodities + commodities_value;
+					}
+					
+					//goal iterator
+					if(itr.hasNext())
+					{
+						current_goal=(Goals)itr.next();
+						goal_year = current_goal.getYear();
+						goal_amt = current_goal.getAmount();
+						goal_id = current_goal.getId();
+					}
+						
+				}
+				
+				else
+				{
+					//update values
+					fixedincome_value = fixed_income + fixedincome_value;
+					equities_value = equities + equities_value;
+					commodities_value = commodities + commodities_value;
+				}
+				access_year++;
+		}
+	}
+		
+
 }
+
