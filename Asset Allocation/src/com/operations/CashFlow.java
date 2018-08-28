@@ -45,7 +45,6 @@ public class CashFlow {
 		int count = 0;
 		
 		int asset_values[] = {0,0,0}; 		//schema is Fixed, Equities, Commodities
-		int current_year = 2018;
 		double yearly_expense_local;
 		double yearly_income_local;
 		
