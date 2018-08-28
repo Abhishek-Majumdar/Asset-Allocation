@@ -50,7 +50,7 @@ public class CashFlow {
 		String get_client_financialInfo = "SELECT MONTHLY_INCOME, MONTHLY_EXPENSE, INC_GROWTH_RATE FROM FINANCIAL_INFO WHERE USERNAME = ?";
 		String get_returnRates = "SELECT MARKET_ID, RATE_RETURN FROM MARKET_DATA";
 		String get_goalTime = "SELECT  GOAL_TIME FROM CLIENT_GOAL";
-		String insert_Cashflow = "INSERT INTO DATABASE VALUES (?,?,?,?,?,?,?,?,?)";
+		String insert_Cashflow = "INSERT INTO EXISTING_CASHFLOW VALUES (?,?,?,?,?,?,?,?,?)";
 //		String get_networth = "SELECT CLIENT_NETWORTH FROM RISK_PROFILE WHERE USERNAME = '?' ";
 		
 		ResultSet current_assets = DataValues.fetchData(get_current_assets,userName);		//Get values from DB
