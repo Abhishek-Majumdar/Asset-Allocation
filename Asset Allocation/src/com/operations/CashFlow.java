@@ -18,7 +18,8 @@ public class CashFlow {
 	private double yearly_income;
 	private double income_growth;
 	private double[] market_returns = new double[4];    //Schema : Fixed income, Equities, Commodities, Inflation rate 
-	private int last_year = 2018;					//Stores the goal completion year for longest goal
+	private int last_year = 2018;						//Stores the goal completion year for longest goal
+	private List<Goals> all_goals=new ArrayList<Goals>();
 	
 	private String userName;
 	
@@ -53,21 +54,28 @@ public class CashFlow {
 		String insert_Cashflow = "INSERT INTO EXISTING_CASHFLOW VALUES (?,?,?,?,?,?,?,?,?)";
 //		String get_networth = "SELECT CLIENT_NETWORTH FROM RISK_PROFILE WHERE USERNAME = '?' ";
 		
+		
 		ResultSet current_assets = DataValues.fetchData(get_current_assets,userName);		//Get values from DB
 		ResultSet client_info = DataValues.fetchData(get_client_financialInfo,userName);	//Get client's financial data
 		ResultSet return_rates = DataValues.fetchData(get_returnRates);						//Get market return rates
 		ResultSet goalTimes = DataValues.fetchData(get_goalTime);							//Get client goals
 		
+		int max_year = 0;
+		last_year = current_year + max_year;
 		try {												//Get last goal's completion year from DB
 			while(goalTimes.next())
-			{
-				last_year = goalTimes.getInt(1);
+			{	
+				if(goalTimes.getInt(1)>max_year)
+				{
+					max_year = goalTimes.getInt(1);
+					last_year = current_year + max_year;
+				}
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Last year"+last_year);
+		
 		try {												//Get existing asset values from DB
 			while(current_assets.next())
 			{
@@ -105,6 +113,7 @@ public class CashFlow {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		count =0;
 
 		double equity_flow = 0.0;
@@ -116,9 +125,8 @@ public class CashFlow {
 		yearly_income_local = yearly_income;
 		yearly_expense_local = yearly_expense;
 		
-		while(current_year < last_year)
+		while(current_year <= last_year)
 		{
-			System.out.println("123");
 			double fixedIncome_returns=market_returns[0]*Randomizer.getRandomValue(-1,2)/100;
 			double equity_returns=market_returns[1]*Randomizer.getRandomValue(-10,10)/100;
 			double commodities_returns=market_returns[2]*Randomizer.getRandomValue(-5,10)/100;
@@ -137,7 +145,7 @@ public class CashFlow {
 			total_net_cashFlow = total_cash_inflow - yearly_expense_local;
 			
 			DataValues.addData(insert_Cashflow, userName, current_year, fixedIncome_flow, equity_flow, commodities_flow, total_cash_inflow, yearly_expense_local, total_net_cashFlow);
-			System.out.println("USername: "+userName+"\ttotal_net_cashFlow"+total_net_cashFlow);
+			
 			current_year += 1;
 		}	
 	}
@@ -146,7 +154,7 @@ public class CashFlow {
 		{
 			double networth =0;
 			double equities_value,fixedincome_value,commodities_value;
-			List<Goals> all_goals=new ArrayList<Goals>();
+//			List<Goals> all_goals=new ArrayList<Goals>();
 			
 			String query_networth = "SELECT CLIENT_NETWORTH FROM RISK_PROFILE WHERE USERNAME = ?";
 			String query_goals = "SELECT GOAL_ID,AMT_OUT,GOAL_TIME FROM CLIENT_GOAL";
@@ -166,18 +174,18 @@ public class CashFlow {
 			}
 			
 			//get all goals
-			try 
-			{
-				ResultSet rs = DataValues.fetchData(query_goals,userName);
-				while(rs.next())
-				{
-					all_goals.add(new Goals(rs.getInt(3),rs.getInt(1),rs.getInt(2)));
-				}
-			} 
-			catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try 
+//			{
+//				ResultSet rs = DataValues.fetchData(query_goals,userName);
+//				while(rs.next())
+//				{
+//					all_goals.add(new Goals(rs.getInt(3),rs.getInt(1),rs.getInt(2)));
+//				}
+//			} 
+//			catch (SQLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			
 			//fetch data: allocated asset
 			Allocation allocateObj = new Allocation();
