@@ -12,18 +12,39 @@ import com.operations.CashFlow;
 
 public class Test {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
 
-		CashFlow c1 = new CashFlow();
-		//PlotGraph p1 = new PlotGraph();
-		c1.setuser();
-		c1.existing_cashflow();
-		c1.alloc_cash();
-		//ResultSet current_assets = DataValues.fetchData(get_current_assets,userName);		//Get values from DB
-	//	double []market_returns = {0,0,0,0};
-	//	p1.plotGraph();
+		while(true) {
+		while(true) {
+			
+			
+			MyConnection con = new MyConnection();
+			Connection conn = con.getMyConnection();
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery("select * from user_session where user_status=1");
+			if(rs.next()) {
+				CashFlow c1 = new CashFlow();
+				c1.setuser();
+				c1.existing_cashflow();
+				c1.alloc_cash();
+				break;
+			}
+			
+		}
+		while(true) {
+			MyConnection con = new MyConnection();
+			Connection conn = con.getMyConnection();
+			Statement st = conn.createStatement();
+			ResultSet rs = st.executeQuery("select * from user_session where user_status=1");
+			if(!rs.next()) {
+				break;
+			}	
+			
+			
+		}}
 		
-//		System.out.println(Randomizer.getRandomValue(1, 100));
+		
+	
 		
 	}
 	
