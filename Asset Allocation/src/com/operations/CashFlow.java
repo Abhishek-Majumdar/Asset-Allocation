@@ -348,7 +348,7 @@ public class CashFlow {
 			ResultSet rs = DataValues.fetchData(query_fetch_goal_status);
 			if (rs.next()) {
 				query = "insert into final_allocation values (?,1,?,?,?,0)";
-			//	recommend();
+				recommend();
 
 			} else {
 				query = "insert into final_allocation values (?,1,?,?,?,1)";
